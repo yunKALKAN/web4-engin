@@ -1,5 +1,9 @@
 {
-  "nodes": {},
+  "nodes": {
+    "AJAN": {"role": "execution"},
+    "MZC": {"role": "asset"},
+    "MYK": {"role": "treasury"}
+  },
   "edges": [],
   "updated": null
 }
