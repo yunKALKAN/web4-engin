@@ -1,7 +1,5 @@
 {
-  "system": "MUCIZEWORK_WEB4",
-  "version": "5.0",
+  "engine": "MUCIZEWORK_WEB4",
   "mode": "BLACK",
-  "modules": ["clustering", "radar", "funding", "signature"],
   "status": "ACTIVE"
 }
