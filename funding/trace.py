@@ -1,14 +1,25 @@
+"""
+Funding Trace Engine — Fon kaynak analizi.
+"""
+
 import time
 
 
 class FundingTrace:
-    def trace(self):
+    def __init__(self):
+        self._flows = [
+            {"from": "external", "to": "MZC", "amount": 162.99},
+            {"from": "MZC", "to": "MYK", "amount": 162.99},
+        ]
+
+    def trace(self, wallet=None):
+        flows = self._flows
+        if wallet:
+            flows = [f for f in self._flows if f["to"] == wallet or f["from"] == wallet]
         return {
+            "wallet": wallet,
             "sources": ["external", "CEX", "bridge"],
-            "flows": [
-                {"from": "external", "to": "MZC", "amount": 162.99},
-                {"from": "MZC", "to": "MYK", "amount": 162.99},
-            ],
+            "flows": flows,
             "confidence": 0.87,
             "timestamp": time.time(),
         }
