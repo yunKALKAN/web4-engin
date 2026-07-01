@@ -191,6 +191,7 @@ docker run -p 5002:5002 web4-engine
 | [CHANGELOG.md](CHANGELOG.md) | Version history |
 | [docs/adr/](docs/adr/) | Architecture Decision Records |
 | [docs/rfc/](docs/rfc/) | Request for Comments |
+| [ORGANIZATION.md](ORGANIZATION.md) | Platform organizational structure |
 
 ---
 
