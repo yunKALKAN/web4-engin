@@ -1,0 +1,29 @@
+name: Anchor Test
+
+on:
+  push:
+    paths: ["programs/**", "tests/**"]
+  pull_request:
+    paths: ["programs/**", "tests/**"]
+
+jobs:
+  test:
+    name: Anchor Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install Solana CLI
+        run: |
+          sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+      - name: Install Anchor
+        run: cargo install --git https://github.com/coral-xyz/anchor avm --force
+      - name: Test
+        run: |
+          if [ -d "programs" ] && [ "$(ls -A programs)" ]; then
+            anchor test
+          else
+            echo "No programs to test yet"
+          fi
