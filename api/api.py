@@ -42,6 +42,7 @@ v1 = Blueprint("v1", __name__, url_prefix="/api/v1")
 # MIDDLEWARE
 # =========================
 
+
 @app.before_request
 def before_request_handler():
     g.request_id = request.headers.get("X-Request-ID", uuid.uuid4().hex)
@@ -107,6 +108,7 @@ def handle_500(e):
 # HEALTH (enhanced)
 # =========================
 
+
 @v1.route("/health")
 def health():
     subsystems = {
@@ -117,13 +119,15 @@ def health():
         "database": _check_db(),
     }
     all_ok = all(s["status"] == "ok" for s in subsystems.values())
-    return jsonify({
-        "status": "online" if all_ok else "degraded",
-        "engine": "WEB4_BLACK_MUCIZEWORK",
-        "version": API_VERSION,
-        "subsystems": subsystems,
-        "timestamp": time.time(),
-    })
+    return jsonify(
+        {
+            "status": "online" if all_ok else "degraded",
+            "engine": "WEB4_BLACK_MUCIZEWORK",
+            "version": API_VERSION,
+            "subsystems": subsystems,
+            "timestamp": time.time(),
+        }
+    )
 
 
 def _check_graph():
@@ -169,6 +173,7 @@ def _check_db():
 # GRAPH
 # =========================
 
+
 @v1.route("/graph")
 def graph():
     return jsonify(cluster.graph())
@@ -178,6 +183,7 @@ def graph():
 # RADAR
 # =========================
 
+
 @v1.route("/radar")
 def get_radar():
     return jsonify(radar.scan())
@@ -186,6 +192,7 @@ def get_radar():
 # =========================
 # FUNDING (with wallet path param)
 # =========================
+
 
 @v1.route("/funding/<wallet>")
 def get_funding(wallet):
@@ -203,6 +210,7 @@ def get_funding_all():
 # FLOW
 # =========================
 
+
 @v1.route("/flow", methods=["POST"])
 def flow():
     data = request.json
@@ -219,6 +227,7 @@ def flow():
 # HASH (SHA256)
 # =========================
 
+
 @v1.route("/hash/sha256", methods=["POST"])
 def hash_sha256():
     data = request.json
@@ -233,6 +242,7 @@ def hash_sha256():
 # SIGN / VERIFY
 # =========================
 
+
 @v1.route("/sign/verify", methods=["POST"])
 def sign_verify():
     data = request.json
@@ -243,11 +253,13 @@ def sign_verify():
     if missing:
         return error_response(422, f"Eksik alanlar: {', '.join(missing)}")
     result = sig.verify(data["wallet"], data["message"], data["signature"])
-    return jsonify({
-        "valid": result["valid"],
-        "hash": result["hash"],
-        "wallet": data["wallet"],
-    })
+    return jsonify(
+        {
+            "valid": result["valid"],
+            "hash": result["hash"],
+            "wallet": data["wallet"],
+        }
+    )
 
 
 # =========================
