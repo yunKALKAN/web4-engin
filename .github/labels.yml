@@ -1,0 +1,47 @@
+- name: bug
+  color: d73a4a
+  description: Something is not working
+
+- name: enhancement
+  color: a2eeef
+  description: New feature or request
+
+- name: documentation
+  color: 0075ca
+  description: Documentation improvements
+
+- name: api
+  color: e4e669
+  description: API related changes
+
+- name: smart-contract
+  color: 9945FF
+  description: Anchor/Solana program changes
+
+- name: security
+  color: b60205
+  description: Security related
+
+- name: good first issue
+  color: 7057ff
+  description: Good for newcomers
+
+- name: help wanted
+  color: 008672
+  description: Extra attention is needed
+
+- name: breaking change
+  color: d93f0b
+  description: Breaking API or interface change
+
+- name: architecture
+  color: 5319e7
+  description: Architecture decisions
+
+- name: performance
+  color: fbca04
+  description: Performance improvements
+
+- name: ci-cd
+  color: 1d76db
+  description: CI/CD pipeline changes
