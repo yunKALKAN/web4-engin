@@ -25,6 +25,7 @@ def client():
 # HEALTH
 # =========================
 
+
 def test_health_success():
     c = client()
     r = c.get("/api/v1/health")
@@ -34,7 +35,13 @@ def test_health_success():
     assert d["status"] in ("online", "degraded")
     assert d["version"] == "1.0"
     assert "subsystems" in d
-    for name in ("graph_engine", "radar_engine", "funding_engine", "signature_engine", "database"):
+    for name in (
+        "graph_engine",
+        "radar_engine",
+        "funding_engine",
+        "signature_engine",
+        "database",
+    ):
         assert name in d["subsystems"], f"Missing subsystem: {name}"
     assert "timestamp" in d
     print("PASS: test_health_success")
@@ -59,6 +66,7 @@ def test_health_custom_request_id():
 # GRAPH
 # =========================
 
+
 def test_graph_success():
     c = client()
     r = c.get("/api/v1/graph")
@@ -77,6 +85,7 @@ def test_graph_success():
 # RADAR
 # =========================
 
+
 def test_radar_success():
     c = client()
     r = c.get("/api/v1/radar")
@@ -90,6 +99,7 @@ def test_radar_success():
 # =========================
 # FUNDING
 # =========================
+
 
 def test_funding_all():
     c = client()
@@ -128,11 +138,14 @@ def test_funding_unknown_wallet():
 # FLOW
 # =========================
 
+
 def test_flow_success():
     c = client()
-    r = c.post("/api/v1/flow",
-               data=json.dumps({"from": "A", "to": "B", "amount": 100}),
-               content_type="application/json")
+    r = c.post(
+        "/api/v1/flow",
+        data=json.dumps({"from": "A", "to": "B", "amount": 100}),
+        content_type="application/json",
+    )
     assert r.status_code == 200
     d = r.get_json()
     assert d["status"] == "flow_added"
@@ -143,9 +156,9 @@ def test_flow_success():
 
 def test_flow_missing_fields():
     c = client()
-    r = c.post("/api/v1/flow",
-               data=json.dumps({"from": "A"}),
-               content_type="application/json")
+    r = c.post(
+        "/api/v1/flow", data=json.dumps({"from": "A"}), content_type="application/json"
+    )
     assert r.status_code == 422
     d = r.get_json()
     assert d["error"]["code"] == "VALIDATION_FAILED"
@@ -167,11 +180,14 @@ def test_flow_empty_body():
 # HASH / SHA256
 # =========================
 
+
 def test_hash_success():
     c = client()
-    r = c.post("/api/v1/hash/sha256",
-               data=json.dumps({"input": "hello"}),
-               content_type="application/json")
+    r = c.post(
+        "/api/v1/hash/sha256",
+        data=json.dumps({"input": "hello"}),
+        content_type="application/json",
+    )
     assert r.status_code == 200
     d = r.get_json()
     assert d["algorithm"] == "sha256"
@@ -182,33 +198,43 @@ def test_hash_success():
 
 def test_hash_deterministic():
     c = client()
-    r1 = c.post("/api/v1/hash/sha256",
-                data=json.dumps({"input": "test"}),
-                content_type="application/json")
-    r2 = c.post("/api/v1/hash/sha256",
-                data=json.dumps({"input": "test"}),
-                content_type="application/json")
+    r1 = c.post(
+        "/api/v1/hash/sha256",
+        data=json.dumps({"input": "test"}),
+        content_type="application/json",
+    )
+    r2 = c.post(
+        "/api/v1/hash/sha256",
+        data=json.dumps({"input": "test"}),
+        content_type="application/json",
+    )
     assert r1.get_json()["hash"] == r2.get_json()["hash"]
     print("PASS: test_hash_deterministic")
 
 
 def test_hash_different_inputs():
     c = client()
-    r1 = c.post("/api/v1/hash/sha256",
-                data=json.dumps({"input": "a"}),
-                content_type="application/json")
-    r2 = c.post("/api/v1/hash/sha256",
-                data=json.dumps({"input": "b"}),
-                content_type="application/json")
+    r1 = c.post(
+        "/api/v1/hash/sha256",
+        data=json.dumps({"input": "a"}),
+        content_type="application/json",
+    )
+    r2 = c.post(
+        "/api/v1/hash/sha256",
+        data=json.dumps({"input": "b"}),
+        content_type="application/json",
+    )
     assert r1.get_json()["hash"] != r2.get_json()["hash"]
     print("PASS: test_hash_different_inputs")
 
 
 def test_hash_missing_input():
     c = client()
-    r = c.post("/api/v1/hash/sha256",
-               data=json.dumps({"data": "x"}),
-               content_type="application/json")
+    r = c.post(
+        "/api/v1/hash/sha256",
+        data=json.dumps({"data": "x"}),
+        content_type="application/json",
+    )
     assert r.status_code == 422
     d = r.get_json()
     assert d["error"]["code"] == "VALIDATION_FAILED"
@@ -219,11 +245,14 @@ def test_hash_missing_input():
 # SIGN / VERIFY
 # =========================
 
+
 def test_sign_verify_success():
     c = client()
-    r = c.post("/api/v1/sign/verify",
-               data=json.dumps({"wallet": "W", "message": "M", "signature": "S"}),
-               content_type="application/json")
+    r = c.post(
+        "/api/v1/sign/verify",
+        data=json.dumps({"wallet": "W", "message": "M", "signature": "S"}),
+        content_type="application/json",
+    )
     assert r.status_code == 200
     d = r.get_json()
     assert "valid" in d
@@ -236,21 +265,27 @@ def test_sign_verify_success():
 
 def test_sign_verify_different_hashes():
     c = client()
-    r1 = c.post("/api/v1/sign/verify",
-                data=json.dumps({"wallet": "A", "message": "m1", "signature": "s1"}),
-                content_type="application/json")
-    r2 = c.post("/api/v1/sign/verify",
-                data=json.dumps({"wallet": "B", "message": "m2", "signature": "s2"}),
-                content_type="application/json")
+    r1 = c.post(
+        "/api/v1/sign/verify",
+        data=json.dumps({"wallet": "A", "message": "m1", "signature": "s1"}),
+        content_type="application/json",
+    )
+    r2 = c.post(
+        "/api/v1/sign/verify",
+        data=json.dumps({"wallet": "B", "message": "m2", "signature": "s2"}),
+        content_type="application/json",
+    )
     assert r1.get_json()["hash"] != r2.get_json()["hash"]
     print("PASS: test_sign_verify_different_hashes")
 
 
 def test_sign_verify_missing_fields():
     c = client()
-    r = c.post("/api/v1/sign/verify",
-               data=json.dumps({"wallet": "W"}),
-               content_type="application/json")
+    r = c.post(
+        "/api/v1/sign/verify",
+        data=json.dumps({"wallet": "W"}),
+        content_type="application/json",
+    )
     assert r.status_code == 422
     d = r.get_json()
     assert d["error"]["code"] == "VALIDATION_FAILED"
@@ -260,6 +295,7 @@ def test_sign_verify_missing_fields():
 # =========================
 # 404 ERROR FORMAT
 # =========================
+
 
 def test_404_error_format():
     c = client()

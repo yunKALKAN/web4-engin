@@ -2,8 +2,6 @@
 Clustering Engine — Wallet sınıflandırma (AJAN / MZC / MYK).
 """
 
-import json
-
 CLUSTERS = {
     "AJAN": {"type": "execution"},
     "MZC": {"type": "asset"},

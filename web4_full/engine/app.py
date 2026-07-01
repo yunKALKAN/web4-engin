@@ -65,11 +65,13 @@ def challenge(wallet):
     }
     save_db(db)
 
-    return jsonify({
-        "wallet": wallet,
-        "nonce": nonce,
-        "message": message,
-    })
+    return jsonify(
+        {
+            "wallet": wallet,
+            "nonce": nonce,
+            "message": message,
+        }
+    )
 
 
 # =========================
@@ -108,10 +110,12 @@ def login():
     }
     save_db(db)
 
-    return jsonify({
-        "status": "logged_in",
-        "token": token,
-    })
+    return jsonify(
+        {
+            "status": "logged_in",
+            "token": token,
+        }
+    )
 
 
 # =========================
@@ -148,10 +152,12 @@ def add_graph():
 # =========================
 @app.route("/status")
 def status():
-    return jsonify({
-        "status": "online",
-        "engine": "MUCIZEWORK_WEB4_FULL_STACK",
-    })
+    return jsonify(
+        {
+            "status": "online",
+            "engine": "MUCIZEWORK_WEB4_FULL_STACK",
+        }
+    )
 
 
 if __name__ == "__main__":

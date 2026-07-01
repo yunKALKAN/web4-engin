@@ -7,11 +7,14 @@ print("CHALLENGE:", c)
 
 print("LOGIN ATTEMPT (needs real signature):")
 
-r = requests.post(BASE + "/login", json={
-    "wallet": "AJAN",
-    "message": c["message"],
-    "signature": "DEMO",
-})
+r = requests.post(
+    BASE + "/login",
+    json={
+        "wallet": "AJAN",
+        "message": c["message"],
+        "signature": "DEMO",
+    },
+)
 
 print("LOGIN:", r.json())
 

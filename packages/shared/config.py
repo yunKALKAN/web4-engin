@@ -1,6 +1,5 @@
 """Configuration management via environment variables."""
 
-import os
 from functools import lru_cache
 
 from pydantic import Field

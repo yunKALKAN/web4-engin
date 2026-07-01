@@ -14,12 +14,14 @@ flows = []
 @app.route("/flow", methods=["POST"])
 def flow():
     data = request.json
-    flows.append({
-        "from": data["from"],
-        "to": data["to"],
-        "amount": data["amount"],
-        "ts": time.time(),
-    })
+    flows.append(
+        {
+            "from": data["from"],
+            "to": data["to"],
+            "amount": data["amount"],
+            "ts": time.time(),
+        }
+    )
     return jsonify({"status": "flow_added", "total": len(flows)})
 
 

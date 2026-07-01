@@ -19,6 +19,7 @@ client = TestClient(app)
 # OBSERVABILITY
 # =========================
 
+
 def test_health_live():
     r = client.get("/health/live")
     assert r.status_code == 200
@@ -41,6 +42,7 @@ def test_metrics():
 # HEALTH
 # =========================
 
+
 def test_health_success():
     r = client.get("/api/v1/health")
     assert r.status_code == 200
@@ -51,7 +53,13 @@ def test_health_success():
     assert data["status"] in ("online", "degraded")
     assert data["version"] == "1.0"
     assert "subsystems" in data
-    for name in ("graph_engine", "radar_engine", "funding_engine", "signature_engine", "database"):
+    for name in (
+        "graph_engine",
+        "radar_engine",
+        "funding_engine",
+        "signature_engine",
+        "database",
+    ):
         assert name in data["subsystems"], f"Missing subsystem: {name}"
     assert "timestamp" in data
 
@@ -82,6 +90,7 @@ def test_health_envelope():
 # GRAPH
 # =========================
 
+
 def test_graph_success():
     r = client.get("/api/v1/graph")
     assert r.status_code == 200
@@ -100,6 +109,7 @@ def test_graph_success():
 # RADAR
 # =========================
 
+
 def test_radar_success():
     r = client.get("/api/v1/radar")
     assert r.status_code == 200
@@ -113,6 +123,7 @@ def test_radar_success():
 # =========================
 # FUNDING
 # =========================
+
 
 def test_funding_all():
     r = client.get("/api/v1/funding")
@@ -151,6 +162,7 @@ def test_funding_unknown_wallet():
 # FLOW
 # =========================
 
+
 def test_flow_success():
     r = client.post("/api/v1/flow", json={"from": "A", "to": "B", "amount": 100})
     assert r.status_code == 200
@@ -174,6 +186,7 @@ def test_flow_empty_body():
 # =========================
 # HASH / SHA256
 # =========================
+
 
 def test_hash_success():
     r = client.post("/api/v1/hash/sha256", json={"input": "hello"})
@@ -207,8 +220,11 @@ def test_hash_missing_input():
 # SIGN / VERIFY
 # =========================
 
+
 def test_sign_verify_success():
-    r = client.post("/api/v1/sign/verify", json={"wallet": "W", "message": "M", "signature": "S"})
+    r = client.post(
+        "/api/v1/sign/verify", json={"wallet": "W", "message": "M", "signature": "S"}
+    )
     assert r.status_code == 200
     d = r.json()
     assert d["success"] is True
@@ -221,8 +237,12 @@ def test_sign_verify_success():
 
 
 def test_sign_verify_different_hashes():
-    r1 = client.post("/api/v1/sign/verify", json={"wallet": "A", "message": "m1", "signature": "s1"})
-    r2 = client.post("/api/v1/sign/verify", json={"wallet": "B", "message": "m2", "signature": "s2"})
+    r1 = client.post(
+        "/api/v1/sign/verify", json={"wallet": "A", "message": "m1", "signature": "s1"}
+    )
+    r2 = client.post(
+        "/api/v1/sign/verify", json={"wallet": "B", "message": "m2", "signature": "s2"}
+    )
     assert r1.json()["data"]["hash"] != r2.json()["data"]["hash"]
 
 
@@ -234,6 +254,7 @@ def test_sign_verify_missing_fields():
 # =========================
 # 404 ERROR FORMAT
 # =========================
+
 
 def test_404_error_format():
     r = client.get("/api/v1/nonexistent")

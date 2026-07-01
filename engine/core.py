@@ -3,11 +3,9 @@ MUCIZEWORK Engine Core — Graph state, event logging, DB yönetimi.
 """
 
 import json
-import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
-
 
 STORAGE_DIR = Path(__file__).resolve().parent.parent / "storage"
 
@@ -123,7 +121,9 @@ class MucizeEngine:
     def get_events(self, limit: int = 50) -> list[dict[str, Any]]:
         return self.events[-limit:]
 
-    def log_custom_event(self, event_type: str, payload: dict[str, Any]) -> dict[str, Any]:
+    def log_custom_event(
+        self, event_type: str, payload: dict[str, Any]
+    ) -> dict[str, Any]:
         return self._log_event(event_type, payload)
 
     # ------------------------------------------------------------------

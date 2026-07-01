@@ -4,7 +4,7 @@ Port: 5002  |  Endpoints: /status, /graph, /events, /db
 """
 
 import os
-from typing import Any, Optional
+from typing import Any
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Query
@@ -38,6 +38,7 @@ engine = MucizeEngine()
 # =========================
 # Pydantic request models
 # =========================
+
 
 class NodeInput(BaseModel):
     node_id: str
@@ -78,6 +79,7 @@ class PositionInput(BaseModel):
 # Status
 # =========================
 
+
 @app.get("/status")
 async def get_status():
     return engine.status()
@@ -86,6 +88,7 @@ async def get_status():
 # =========================
 # Graph endpoints
 # =========================
+
 
 @app.get("/graph")
 async def get_graph():
@@ -116,6 +119,7 @@ async def add_edge(body: EdgeInput):
 # Events
 # =========================
 
+
 @app.get("/events")
 async def get_events(limit: int = Query(default=50, ge=1, le=500)):
     return engine.get_events(limit=limit)
@@ -130,6 +134,7 @@ async def post_event(body: EventInput):
 # =========================
 # DB endpoints
 # =========================
+
 
 @app.get("/db")
 async def get_db():
@@ -157,6 +162,7 @@ async def add_position(body: PositionInput):
 # =========================
 # Health
 # =========================
+
 
 @app.get("/health")
 async def health():

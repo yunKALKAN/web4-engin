@@ -37,7 +37,9 @@ class Envelope(BaseModel):
     error: Optional[ErrorDetail] = None
 
     @classmethod
-    def ok(cls, data: Any, request_id: str | None = None, trace_id: str | None = None) -> "Envelope":
+    def ok(
+        cls, data: Any, request_id: str | None = None, trace_id: str | None = None
+    ) -> "Envelope":
         return cls(success=True, data=data, request_id=request_id, trace_id=trace_id)
 
     @classmethod

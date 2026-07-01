@@ -31,7 +31,7 @@ from fastapi.responses import JSONResponse
 # Ensure project root is importable
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
-from packages.models.envelope import ERROR_MAP, Envelope
+from packages.models.envelope import Envelope
 from packages.models.requests import FlowRequest, HashRequest, SignVerifyRequest
 from packages.shared.config import get_settings
 from packages.shared.logger import get_logger
@@ -62,6 +62,7 @@ signature_service = SignatureService()
 # =========================
 # MIDDLEWARE
 # =========================
+
 
 @app.middleware("http")
 async def request_middleware(request: Request, call_next):
@@ -98,6 +99,7 @@ async def request_middleware(request: Request, call_next):
 # ERROR HANDLERS
 # =========================
 
+
 @app.exception_handler(404)
 async def not_found_handler(request: Request, exc):
     rid = getattr(request.state, "request_id", None)
@@ -125,6 +127,7 @@ async def internal_handler(request: Request, exc):
 # =========================
 # OBSERVABILITY
 # =========================
+
 
 @app.get("/health/live", tags=["observability"])
 async def health_live():
@@ -159,6 +162,7 @@ async def metrics():
 
 # --- HEALTH ---
 
+
 @app.get("/api/v1/health", tags=["health"])
 async def health(request: Request):
     subsystems = {
@@ -191,7 +195,9 @@ def _check_service(service, name: str) -> dict:
 
 
 def _check_db() -> dict:
-    db_path = os.path.join(os.path.dirname(__file__), "..", "..", "storage", "db", "db.json")
+    db_path = os.path.join(
+        os.path.dirname(__file__), "..", "..", "storage", "db", "db.json"
+    )
     if os.path.exists(db_path):
         return {"status": "ok"}
     return {"status": "error", "detail": "db.json not found"}
@@ -205,6 +211,7 @@ def _check_rpc() -> dict:
 
 # --- GRAPH ---
 
+
 @app.get("/api/v1/graph", tags=["graph"])
 async def graph(request: Request):
     data = graph_service.get_graph()
@@ -214,6 +221,7 @@ async def graph(request: Request):
 
 # --- RADAR ---
 
+
 @app.get("/api/v1/radar", tags=["radar"])
 async def radar(request: Request):
     data = radar_service.scan()
@@ -222,6 +230,7 @@ async def radar(request: Request):
 
 
 # --- FUNDING ---
+
 
 @app.get("/api/v1/funding/{wallet}", tags=["funding"])
 async def funding_wallet(request: Request, wallet: str):
@@ -239,6 +248,7 @@ async def funding_all(request: Request):
 
 # --- FLOW ---
 
+
 @app.post("/api/v1/flow", tags=["flow"])
 async def flow(request: Request, body: FlowRequest):
     data = {
@@ -252,6 +262,7 @@ async def flow(request: Request, body: FlowRequest):
 
 # --- HASH / SHA256 ---
 
+
 @app.post("/api/v1/hash/sha256", tags=["signature"])
 async def hash_sha256(request: Request, body: HashRequest):
     digest = hashlib.sha256(body.input.encode("utf-8")).hexdigest()
@@ -261,6 +272,7 @@ async def hash_sha256(request: Request, body: HashRequest):
 
 
 # --- SIGN / VERIFY ---
+
 
 @app.post("/api/v1/sign/verify", tags=["signature"])
 async def sign_verify(request: Request, body: SignVerifyRequest):
@@ -277,7 +289,8 @@ async def sign_verify(request: Request, body: SignVerifyRequest):
 if __name__ == "__main__":
     import uvicorn
 
-    print(f"WEB4 MUCIZEWORK ENGINE STARTED — API Contract v1")
+    print("WEB4 MUCIZEWORK ENGINE STARTED — API Contract v1")
     print(f"PORT: {settings.port}")
     print(f"DOCS: http://127.0.0.1:{settings.port}/docs")
-    uvicorn.run(app, host="0.0.0.0", port=settings.port)
+    host = os.environ.get("MZC_HOST", "0.0.0.0")  # nosec B104
+    uvicorn.run(app, host=host, port=settings.port)
